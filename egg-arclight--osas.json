@@ -1,0 +1,81 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2024-04-08T12:16:45-04:00",
+    "name": "Arclight-Osas",
+    "author": "pisofloor7@gmail.com",
+    "description": "Arclight",
+    "features": [
+        "eula",
+        "java_version",
+        "pid_limit"
+    ],
+    "docker_images": {
+        "OpenJDK 21": "ghcr.io\/software-noob\/pterodactyl-images:java_21",
+        "Java 21": "ghcr.io\/pterodactyl\/yolks:java_21",
+        "Java 17": "ghcr.io\/pterodactyl\/yolks:java_17",
+        "Java 16": "ghcr.io\/pterodactyl\/yolks:java_16",
+        "Java 11": "ghcr.io\/pterodactyl\/yolks:java_11",
+        "Java 8": "ghcr.io\/pterodactyl\/yolks:java_8"
+    },
+    "file_denylist": [],
+    "startup": "java -XX:+UseContainerSupport -Xms$(({{SERVER_MEMORY}}*{{MEMORY}}\/100))M -Xmx$(({{SERVER_MEMORY}}*{{MEMORY}}\/100))M {{STARTUP_COMMAND}} -jar {{SERVER_JARFILE}}",
+    "config": {
+        "files": "{\r\n    \"server.properties\": {\r\n        \"parser\": \"properties\",\r\n        \"find\": {\r\n            \"server-ip\": \"0.0.0.0\",\r\n            \"server-port\": \"{{server.build.default.port}}\",\r\n            \"query.port\": \"{{server.build.default.port}}\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"Terminado!\": \")! Por ayuda, escribe \"\r\n}",
+        "logs": "{}",
+        "stop": "stop"
+    },
+    "scripts": {
+        "installation": {
+            "script": "##########################################################\r\n#!\/bin\/ash \r\n# Arclight Installation Script by Osas (version peruana)\r\n# \r\n# Server Files: \/mnt\/server \r\nPROJECT=arclight \r\ncd \/mnt\/server \r\nif [ -f ${SERVER_JARFILE} ]; then \r\nmv ${SERVER_JARFILE} ${SERVER_JARFILE}.old \r\nfi \r\n##################################################################################################################################\r\nif [ ! -f server.jar ]; then \r\necho -e \"Descargando un nuevo server.jar porque no existe ya uno, si no se remplazaria en la parte de arriba a server.jar.old\" \r\ncurl -o server.jar https:\/\/files.hypoglycemia.icu\/v1\/files\/${PROJECT}\/minecraft\/${MINECRAFT_VERSION}\/latest-stable\/forge \r\nfi \r\n##################################################################################################################################\r\nSERVER_JAR_SIZE=$(stat -c%s \"server.jar\") #####\r\n###############################################\r\nif [ $SERVER_JAR_SIZE -lt 5120 ]; then\r\necho -e \"Normalmente cuando se descarga una version erronea como x ejemplo pones 1,12.2 en lugar de 1.12.2 se descarga un archivo de 0 bytes por lo que esto servira de metodo de comparacion en ese escenario y asi descargar la version espcificada como 1.20.1.\"\r\ncurl -o server.jar https:\/\/files.hypoglycemia.icu\/v1\/files\/${PROJECT}\/minecraft\/1.20.1\/latest-stable\/forge\r\nfi\r\n###########################################################################################################################33\r\nif [ ! -f server.properties ]; then\r\necho -e \"Descargando un nuevo server.properties y el eula al no existir antes (el eula ya esta aceptado)\"\r\ncurl -o server.properties https:\/\/raw.githubusercontent.com\/parkervcp\/eggs\/master\/minecraft\/java\/server.properties\r\ncurl -o eula.txt https:\/\/pastebin.com\/raw\/Wd7J9vC5\r\nfi\r\n#################################################################################################################################",
+            "container": "ghcr.io\/pterodactyl\/installers:alpine",
+            "entrypoint": "ash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Version de MC",
+            "description": "La versi\u00f3n de Minecraft para descargar.\r\n\r\nLas versiones inv\u00e1lidas se consideraran versiones 1.20.1\r\n(Favor de revisar bien lo escrito aqui)",
+            "env_variable": "MINECRAFT_VERSION",
+            "default_value": "1.20.1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Nombre del archivo .jar",
+            "description": "El archivo .jar que el server usara para ejecutar",
+            "env_variable": "SERVER_JARFILE",
+            "default_value": "server.jar",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|regex:\/^([\\w\\d._-]+)(\\.jar)$\/",
+            "field_type": "text"
+        },
+        {
+            "name": "FLAGS DE INICIO",
+            "description": "Modifique las flags que requiera, por defecto utilizamos Aikar's Flags. Le recomendamos no modificar esta variable si no tiene conocimiento acerca de este.",
+            "env_variable": "STARTUP_COMMAND",
+            "default_value": "-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https:\/\/mcflags.emc.gs -Daikars.new.flags=true -XX:G1NewSizePercent=40 -XX:G1MaxNewSizePercent=50 -XX:G1HeapRegionSize=16M -XX:G1ReservePercent=15",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "RAM",
+            "description": "Modifique el uso de memoria a sus flags. Por defecto est\u00e1 en 80, lo que har\u00e1 que su servidor use el 80% de la memoria definida. Esto causar\u00e1 un buen funcionamiento para el uso de la memoria. Le recomendamos no cambiar esta variable si no tiene conocimiento de este.",
+            "env_variable": "MEMORY",
+            "default_value": "80",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:3",
+            "field_type": "text"
+        }
+    ]
+}
