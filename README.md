@@ -1,4 +1,4 @@
-# A Non-Official Arclight EGG
+# A Non-Official Pterodactyl Arclight EGG
 
 A Bukkit-Forge server implementation utilizing Mixin.
 
