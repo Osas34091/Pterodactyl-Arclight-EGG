@@ -14,7 +14,7 @@ The minecraft server requires a single port for access (default 25565) but plugi
 
 ## Notes
 Providing a Minecraft version of ``latest`` or an invalid value will default to 1.20.1.
-There is no API to query to find the true latest supported version.
+<p>There is no API to query to find the true latest supported version.<p>
 
 The Variables description and names are on Spanish, so translate on your own
 
